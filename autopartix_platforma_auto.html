@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="ro" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoPartix | Soluții Auto Profesionale & Piese la Preț de Producător</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- GSAP for Smooth Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#e6f7ff',
+                            100: '#b3edff',
+                            400: '#00d2ff',
+                            500: '#00a3ff',
+                            600: '#0066ff',
+                            900: '#001a4d',
+                            glow: '#00f0ff',
+                        },
+                        darkBg: '#06080d',
+                        darkCard: 'rgba(15, 23, 42, 0.65)',
+                        darkBorder: 'rgba(0, 210, 255, 0.18)',
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 25px -5px rgba(0, 210, 255, 0.5), 0 0 10px -2px rgba(0, 102, 255, 0.3)',
+                        'neon-strong': '0 0 35px 2px rgba(0, 240, 255, 0.6)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'scanline': 'scanline 8s linear infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(0, 210, 255, 0.2)' },
+                            '100%': { boxShadow: '0 0 35px rgba(0, 240, 255, 0.7)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(1deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #06080d;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06080d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 210, 255, 0.2);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0066ff;
+        }
+
+        /* Grid Background Effect */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 210, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 210, 255, 0.04) 1px, transparent 1px);
+        }
+
+        /* Radial Glow Backdrop */
+        .glow-overlay {
+            background: radial-gradient(circle at 50% 20%, rgba(0, 102, 255, 0.15) 0%, rgba(0, 240, 255, 0.05) 45%, transparent 70%);
+        }
+
+        /* Custom Glow Cursor Effect */
+        #custom-cursor {
+            pointer-events: none;
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.08) 0%, rgba(0, 102, 255, 0.02) 50%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 210, 255, 0.15);
+        }
+
+        .glass-panel-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-panel-hover:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 25px -5px rgba(0, 210, 255, 0.3);
+            transform: translateY(-4px);
+        }
+
+        /* Glowing text gradient */
+        .text-glow {
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
+        }
+    </style>
+</head>
+<body class="relative bg-grid-pattern antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Follow Cursor Lighting -->
+    <div id="custom-cursor" class="hidden md:block"></div>
+
+    <!-- Top Educational Disclaimer Bar -->
+    <div id="disclaimer-bar" class="relative z-50 bg-gradient-to-r from-blue-900/90 via-indigo-900/90 to-blue-950/90 border-b border-brand-400/30 px-4 py-2.5 text-xs text-blue-100 flex items-center justify-between shadow-lg backdrop-blur-md">
+        <div class="max-w-7xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-brand-400/20 text-brand-400 border border-brand-400/40 uppercase tracking-wider">
+                    FIRMĂ DE EXERCIȚIU
+                </span>
+                <p class="font-medium">
+                    Acest site este creat în scop strict educativ pentru disciplina <span class="text-white font-semibold underline decoration-brand-400">„Educație Antreprenorială”</span>.
+                </p>
+            </div>
+            <div class="flex items-center space-x-4 text-[11px] text-blue-200">
+                <span class="hidden md:inline">Coincidența numelui este pur întâmplătoare.</span>
+                <button onclick="closeDisclaimer()" class="hover:text-white text-blue-300 p-1 rounded-lg hover:bg-white/10 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-xl bg-darkBg/80 border-b border-brand-400/15 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center p-0.5 shadow-neon-blue group-hover:scale-105 transition-transform duration-300">
+                        <div class="w-full h-full bg-darkBg rounded-[10px] flex items-center justify-center">
+                            <i data-lucide="zap" class="w-6 h-6 text-brand-400 group-hover:rotate-12 transition-transform"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-display text-2xl font-black tracking-wider text-white flex items-center">
+                            AUTO<span class="text-brand-400">PARTIX</span>
+                        </span>
+                        <span class="text-[9px] uppercase tracking-widest text-blue-300/70 font-semibold -mt-1">Soluții Auto Profesionale</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-8 text-sm font-medium">
+                    <a href="#hero" class="text-white hover:text-brand-400 transition-colors flex items-center space-x-1">
+                        <span>Acasă</span>
+                    </a>
+                    <a href="#catalog" class="text-gray-300 hover:text-brand-400 transition-colors">Piese Auto</a>
+                    <a href="#marci" class="text-gray-300 hover:text-brand-400 transition-colors">Mărci Supuse</a>
+                    <a href="#koenigsegg-section" class="text-gray-300 hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
+                        </span>
+                        <span>Hypercar Zone</span>
+                    </a>
+                    <a href="#tombola" class="text-gray-300 hover:text-brand-400 transition-colors">Marea Tombolă</a>
+                    <a href="#despre" class="text-gray-300 hover:text-brand-400 transition-colors">Despre Noi</a>
+                </nav>
+
+                <!-- Action Buttons & Search -->
+                <div class="flex items-center space-x-4">
+                    <!-- Search Button -->
+                    <button onclick="toggleSearchModal()" class="p-2.5 rounded-xl bg-slate-900/80 border border-brand-400/20 text-gray-300 hover:text-white hover:border-brand-400/50 transition-all">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Shopping Cart Trigger -->
+                    <button onclick="toggleCartDrawer()" class="relative p-2.5 rounded-xl bg-slate-900/80 border border-brand-400/20 text-gray-300 hover:text-white hover:border-brand-400/50 transition-all">
+                        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-brand-500 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-darkBg shadow-neon-blue">
+                            0
+                        </span>
+                    </button>
+
+                    <!-- Primary CTA -->
+                    <a href="#catalog" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-semibold text-sm text-darkBg bg-gradient-to-r from-brand-400 to-brand-500 hover:from-brand-500 hover:to-brand-600 shadow-neon-blue transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                        <i data-lucide="wrench" class="w-4 h-4 mr-2"></i>
+                        Caută Piese
+                    </a>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl bg-slate-900 border border-brand-400/20 text-gray-300 hover:text-white">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden border-b border-brand-400/20 bg-slate-950/95 backdrop-blur-2xl px-4 pt-2 pb-6 space-y-3">
+            <a href="#hero" onclick="toggleMobileMenu()" class="block py-2 text-base font-medium text-white hover:text-brand-400">Acasă</a>
+            <a href="#catalog" onclick="toggleMobileMenu()" class="block py-2 text-base font-medium text-gray-300 hover:text-brand-400">Piese Auto</a>
+            <a href="#koenigsegg-section" onclick="toggleMobileMenu()" class="block py-2 text-base font-medium text-gray-300 hover:text-brand-400">Hypercar Zone</a>
+            <a href="#tombola" onclick="toggleMobileMenu()" class="block py-2 text-base font-medium text-gray-300 hover:text-brand-400">Marea Tombolă</a>
+            <a href="#despre" onclick="toggleMobileMenu()" class="block py-2 text-base font-medium text-gray-300 hover:text-brand-400">Despre Noi</a>
+            <a href="#catalog" onclick="toggleMobileMenu()" class="w-full mt-4 flex items-center justify-center px-4 py-3 rounded-xl font-bold text-darkBg bg-brand-400 shadow-neon-blue">
+                Caută Piese Piese Auto
+            </a>
+        </div>
+    </header>
+
+    <main class="relative z-10 overflow-hidden">
+
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-[90vh] flex items-center justify-center pt-12 pb-24 glow-overlay">
+            
+            <!-- Glowing Background Orbs -->
+            <div class="absolute top-1/4 left-10 w-96 h-96 bg-brand-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-brand-400/15 rounded-full blur-[140px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Hero Content -->
+                    <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                        
+                        <!-- Badge -->
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border-brand-400/30 text-brand-400 text-xs font-semibold uppercase tracking-widest shadow-neon-blue">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-brand-400"></i>
+                            <span>Prețuri Direct de la Producător</span>
+                        </div>
+
+                        <!-- Main Headline -->
+                        <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-none">
+                            VREI PIESE AUTO LA <br>
+                            <span class="bg-gradient-to-r from-brand-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent text-glow">
+                                PREȚ DE PRODUCĂTOR?
+                            </span>
+                        </h1>
+
+                        <!-- Subtitle -->
+                        <p class="text-lg sm:text-xl text-gray-300 max-w-2xl font-light leading-relaxed mx-auto lg:mx-0">
+                            <strong class="text-white font-semibold">AutoPartix te rezolvă!</strong> Avem cea mai variată gamă de piese – de la mașini obișnuite de zi cu zi, chiar și până la un <span class="text-brand-400 font-bold border-b border-brand-400/40">Koenigsegg</span> de ultimă generație.
+                        </p>
+
+                        <!-- CTA Group -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                            <a href="#catalog" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-400 to-brand-600 text-darkBg font-extrabold text-base tracking-wide shadow-neon-strong hover:scale-105 transition-all flex items-center justify-center gap-3">
+                                <i data-lucide="search" class="w-5 h-5"></i>
+                                Caută Piesa Ta Acum
+                            </a>
+
+                            <a href="#tombola" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-panel border-brand-400/40 text-white font-bold text-base hover:bg-brand-500/10 hover:border-brand-400 transition-all flex items-center justify-center gap-3">
+                                <i data-lucide="trophy" class="w-5 h-5 text-amber-400"></i>
+                                Marea Tombolă (3550 RON)
+                            </a>
+                        </div>
+
+                        <!-- Mini Stats Bar -->
+                        <div class="grid grid-cols-3 gap-4 pt-8 border-t border-slate-800/80">
+                            <div>
+                                <div class="font-display text-2xl lg:text-3xl font-bold text-white">100.000+</div>
+                                <div class="text-xs text-gray-400 uppercase tracking-wider">Piese în Stoc</div>
+                            </div>
+                            <div>
+                                <div class="font-display text-2xl lg:text-3xl font-bold text-white">24-48h</div>
+                                <div class="text-xs text-gray-400 uppercase tracking-wider">Livrare Rapidă</div>
+                            </div>
+                            <div>
+                                <div class="font-display text-2xl lg:text-3xl font-bold text-white text-brand-400">100%</div>
+                                <div class="text-xs text-gray-400 uppercase tracking-wider">Garanție Producător</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Right Visual Showcase / Futuristic 3D Card -->
+                    <div class="lg:col-span-5 relative">
+                        <!-- Neon Ring Layer -->
+                        <div class="relative mx-auto max-w-md lg:max-w-none">
+                            <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-brand-400 to-blue-600 opacity-30 blur-2xl animate-pulse-glow"></div>
+                            
+                            <!-- Main Hero Visual Card -->
+                            <div class="relative glass-panel p-6 rounded-3xl border border-brand-400/30 bg-slate-950/80 shadow-2xl">
+                                
+                                <!-- Floating Tag -->
+                                <div class="absolute -top-4 -right-4 bg-gradient-to-r from-amber-500 to-amber-600 text-darkBg font-black text-xs px-4 py-2 rounded-xl shadow-lg flex items-center gap-1.5 uppercase tracking-wider animate-float z-20">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                    Marele Premiu
+                                </div>
+
+                                <!-- Hypercar Image Container with Scanline Effect -->
+                                <div class="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 flex items-center justify-center group border border-slate-800">
+                                    <div class="absolute inset-0 bg-grid-pattern opacity-30"></div>
+                                    
+                                    <!-- Hypercar Render Image - Koenigsegg Jesko -->
+                                    <img src="https://thesupercarblog.com/wp-content/uploads/2025/04/Koenigsegg-Jesko-Absolut-Kronos-2.jpg" 
+                                         alt="Koenigsegg Jesko" 
+                                         class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+
+                                    <!-- Blue Overlay Overlay -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-80"></div>
+                                    
+                                    <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                                        <div class="bg-darkBg/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-brand-400/30">
+                                            <span class="text-xs font-mono text-brand-400">KOENIGSEGG JESKO V8 (5.0L)</span>
+                                        </div>
+                                        <div class="bg-amber-400/90 text-darkBg text-xs font-black px-2.5 py-1 rounded-md">
+                                            1600 CP (E85)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Engine Component Overlay - Flat-Plane Crank V8 -->
+                                <div class="mt-4 p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-lg bg-brand-500/10 border border-brand-400/30 flex items-center justify-center shrink-0">
+                                        <i data-lucide="cpu" class="w-6 h-6 text-brand-400"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-xs text-gray-400 font-mono">Motor & Transmisie LST</div>
+                                        <div class="text-sm font-bold text-white truncate">5.0L V8 Flat-Plane & Light Speed Transmission</div>
+                                        <div class="text-[11px] text-brand-400 font-semibold">1280 CP (Benzină) / 1600 CP (E85) | 480+ km/h</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Search Filter Bar Section -->
+        <section class="relative z-20 -mt-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="glass-panel p-6 sm:p-8 rounded-2xl border-brand-400/30 shadow-2xl bg-slate-950/90">
+                <div class="flex items-center gap-2 mb-4 text-brand-400 font-semibold text-sm uppercase tracking-wider">
+                    <i data-lucide="filter" class="w-4 h-4"></i>
+                    <span>Căutare Rapidă Piese după Vehicul</span>
+                </div>
+
+                <form id="vehicle-filter-form" onsubmit="handleFilterSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Marca -->
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">1. Marcă</label>
+                        <select id="select-make" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-brand-400 text-sm">
+                            <option value="">Toate Mărcile</option>
+                            <optgroup label="1. Mărci de Volum">
+                                <option value="dacia">Dacia (Logan, Duster, Sandero, Stepway)</option>
+                                <option value="volkswagen">Volkswagen (Golf, Passat, Tiguan, Polo)</option>
+                                <option value="skoda">Skoda (Octavia, Rapid, Superb)</option>
+                                <option value="renault">Renault (Clio, Megane, Scenic, Kadjar)</option>
+                                <option value="ford">Ford (Focus, Fiesta, Mondeo, Kuga)</option>
+                                <option value="opel">Opel (Astra H/J/K, Corsa, Insignia)</option>
+                            </optgroup>
+                            <optgroup label="2. Mărci Premium">
+                                <option value="bmw">BMW (Seria 3, Seria 5, X3, X5)</option>
+                                <option value="audi">Audi (A4, A6, A3, Q5)</option>
+                                <option value="mercedes">Mercedes-Benz (Clasa C, E, Vito/Sprinter)</option>
+                            </optgroup>
+                            <optgroup label="3. Mărci Asiatice">
+                                <option value="toyota">Toyota (Corolla, Yaris, RAV4)</option>
+                                <option value="hyundai">Hyundai (Tucson, i30)</option>
+                                <option value="kia">Kia (Ceed, Sportage)</option>
+                            </optgroup>
+                            <optgroup label="4. Hypercar">
+                                <option value="koenigsegg">Koenigsegg (Jesko, Gemera, Regera)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- Model -->
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">2. Model</label>
+                        <select id="select-model" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-brand-400 text-sm">
+                            <option value="">Selectează Modelul</option>
+                            <option value="jesko">Koenigsegg Jesko V8</option>
+                            <option value="logan">Dacia Logan / Duster</option>
+                            <option value="golf">VW Golf / Passat</option>
+                            <option value="octavia">Skoda Octavia</option>
+                            <option value="seria3">BMW Seria 3 / Seria 5</option>
+                            <option value="a4">Audi A4 / A6</option>
+                            <option value="tucson">Hyundai Tucson / Kia Ceed</option>
+                        </select>
+                    </div>
+
+                    <!-- An -->
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">3. An Fabricație</label>
+                        <select id="select-year" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-brand-400 text-sm">
+                            <option value="">Selectează Anul</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                        </select>
+                    </div>
+
+                    <!-- Categorie -->
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">4. Categorie Piesă</label>
+                        <select id="select-category" class="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-brand-400 text-sm">
+                            <option value="">Toate Categoriile</option>
+                            <option value="motor">Componente Motor</option>
+                            <option value="frane">Sistem de Frânare</option>
+                            <option value="suspensie">Suspensie & Direcție</option>
+                            <option value="turbo">Turbine & Evacuare</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-brand-400 to-brand-600 text-darkBg font-bold text-sm shadow-neon-blue hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            Găsește Piese
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Marea Tombolă Koenigsegg Section -->
+        <section id="tombola" class="py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-xs uppercase tracking-widest inline-block">
+                        🎁 Concurs Exclusiv AutoPartix
+                    </span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-black text-white">
+                        CÂȘTIGĂ ACEST <span class="text-brand-400 text-glow">KOENIGSEGG!</span>
+                    </h2>
+                    <p class="text-gray-300 text-base sm:text-lg">
+                        Cumpără componente auto de la noi în valoare de minim <strong class="text-amber-400 underline">3.550 RON</strong> și ești înscris automat în cea mai mare tombolă auto din anul acesta!
+                    </p>
+                </div>
+
+                <!-- Tombola Main Card Grid -->
+                <div class="grid lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Left: Interactive Progress & Calculator -->
+                    <div class="lg:col-span-7 glass-panel p-6 sm:p-8 rounded-3xl border-brand-400/30 space-y-8">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold text-gray-300">Prag Calificare Tombolă</span>
+                                <span id="calculator-target-text" class="text-sm font-mono text-brand-400 font-bold">0 / 3.550 RON</span>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="w-full h-4 bg-slate-900 rounded-full overflow-hidden border border-slate-800 p-0.5">
+                                <div id="calculator-progress-bar" class="h-full bg-gradient-to-r from-brand-500 to-amber-400 rounded-full transition-all duration-500 w-0 shadow-neon-blue"></div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Simulator -->
+                        <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4">
+                            <h3 class="text-white font-bold text-base flex items-center gap-2">
+                                <i data-lucide="calculator" class="w-5 h-5 text-brand-400"></i>
+                                Simulation Calculator Șanse
+                            </h3>
+                            <p class="text-xs text-gray-400">Introduceți valoarea estimată a piese-lor de care aveți nevoie pentru a vedea câte bilete de tombolă primiți:</p>
+
+                            <div class="flex items-center gap-4">
+                                <input type="number" id="calc-input-amount" value="3550" placeholder="Suma în RON" class="w-full bg-slate-950 border border-slate-700 text-white text-lg font-mono rounded-xl px-4 py-3 focus:outline-none focus:border-brand-400">
+                                <button onclick="calculateTickets()" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-sm shrink-0 transition-colors shadow-neon-blue">
+                                    Calculează
+                                </button>
+                            </div>
+
+                            <!-- Calculation Result Box -->
+                            <div id="calculator-result" class="p-4 rounded-xl bg-brand-500/10 border border-brand-400/30 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold text-lg">
+                                        🎫
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-gray-400">Bilete de Tombolă Generațe</div>
+                                        <div id="ticket-count-display" class="text-xl font-bold text-white">1 Bilet Garantat</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-brand-400 font-mono">Status: Calificat!</span>
+                            </div>
+                        </div>
+
+                        <!-- Rule Details -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-gray-400">
+                            <div class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i>
+                                <span>Participarea se face pe baza bonului sau facturii fiscale verificate.</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-400 shrink-0 mt-0.5"></i>
+                                <span>Fără limită de bilete per client! Mai multe piese = Mai multe șanse.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Visual Ticket / Promo Card -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="glass-panel p-8 rounded-3xl border-amber-400/40 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-center relative overflow-hidden">
+                            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl"></div>
+
+                            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg text-darkBg">
+                                <i data-lucide="car" class="w-10 h-10"></i>
+                            </div>
+
+                            <h3 class="font-display text-2xl font-bold text-white mb-2">Koenigsegg Jesko Track/Attack</h3>
+                            <p class="text-xs text-gray-400 mb-6">Motor V8 5.0L Twin-Turbo cu arbore cotit Flat-Plane (12.5 kg), cutie LST 9 trepte cu multi-ambreiaj, 1000 kg apăsare aerodinamică.</p>
+
+                            <div class="border-t border-b border-slate-800 py-4 my-4 space-y-2 font-mono text-xs">
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Valoare Estimată:</span>
+                                    <span class="text-white font-bold">€3.400.000</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Putere Maximă:</span>
+                                    <span class="text-amber-400 font-bold">1600 CP (E85) / 1280 CP</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Viteză Maxima Estimată:</span>
+                                    <span class="text-brand-400 font-bold">480+ km/h (300+ mph)</span>
+                                </div>
+                            </div>
+
+                            <button onclick="scrollToCatalog()" class="w-full py-3.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-darkBg font-black text-sm uppercase tracking-wider transition-all shadow-lg">
+                                Cumpără Piese & Înscrie-te
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Koenigsegg Technical Showcase (Hotspots) -->
+        <section id="koenigsegg-section" class="py-24 bg-slate-950/60 border-y border-brand-400/10 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                        <!-- Hotspot 1: Motor V8 Twin-Turbo Flat-Plane -->
+                        <div class="absolute top-1/3 left-1/3 group">
+                            <button onclick="showSpecModal('motor')" class="relative flex items-center justify-center w-8 h-8 rounded-full bg-brand-500 text-white font-bold text-xs shadow-neon-strong animate-bounce">
+                                1
+                                <span class="absolute -inset-2 rounded-full border border-brand-400 animate-ping"></span>
+                            </button>
+                            <div class="hidden group-hover:block absolute left-10 top-0 bg-darkBg/95 backdrop-blur-md p-3 rounded-xl border border-brand-400/40 text-xs w-56 z-30 shadow-2xl">
+                                <div class="font-bold text-brand-400">Motor Jesko 5.0L V8 Twin-Turbo</div>
+                                <div class="text-gray-300 text-[11px] mt-1">Cel mai ușor arbore cotit V8 (12.5 kg), flat-plane, 8500 RPM, 1600 CP pe E85.</div>
+                            </div>
+                        </div>
+
+                        <!-- Hotspot 2: Transmisie Light Speed Transmission (LST) -->
+                        <div class="absolute bottom-1/3 left-1/2 group">
+                            <button onclick="showSpecModal('lst')" class="relative flex items-center justify-center w-8 h-8 rounded-full bg-brand-500 text-white font-bold text-xs shadow-neon-strong animate-pulse">
+                                2
+                            </button>
+                            <div class="hidden group-hover:block absolute left-10 top-0 bg-darkBg/95 backdrop-blur-md p-3 rounded-xl border border-brand-400/40 text-xs w-56 z-30 shadow-2xl">
+                                <div class="font-bold text-brand-400">Transmisie LST (9 Trepte)</div>
+                                <div class="text-gray-300 text-[11px] mt-1">Cutie revoluționară Koenigsegg cu 7 ambreiaje. Schimbă treptele la viteza luminii.</div>
+                            </div>
+                        </div>
+
+                        <!-- Hotspot 3: Suspensie Triplex & Aerodinamică -->
+                        <div class="absolute top-1/2 right-1/3 group">
+                            <button onclick="showSpecModal('suspensie')" class="relative flex items-center justify-center w-8 h-8 rounded-full bg-brand-500 text-white font-bold text-xs shadow-neon-strong animate-pulse">
+                                3
+                            </button>
+                            <div class="hidden group-hover:block absolute right-10 top-0 bg-darkBg/95 backdrop-blur-md p-3 rounded-xl border border-brand-400/40 text-xs w-56 z-30 shadow-2xl">
+                                <div class="font-bold text-brand-400">Suspensie Triplex Fata/Spate</div>
+                                <div class="text-gray-300 text-[11px] mt-1">Amortizor orizontal suplimentar pentru compensarea fortelor aerodinamice la 1000kg downforce.</div>
+                            </div>
+                        </div>
+
+                        <!-- Hotspot 2: Frâne Carbon Ceramice -->
+                        <div class="absolute bottom-1/3 left-1/4 group">
+                            <button onclick="showSpecModal('frane')" class="relative flex items-center justify-center w-8 h-8 rounded-full bg-brand-500 text-white font-bold text-xs shadow-neon-strong animate-pulse">
+                                2
+                            </button>
+                            <div class="hidden group-hover:block absolute left-10 top-0 bg-darkBg/95 backdrop-blur-md p-3 rounded-xl border border-brand-400/40 text-xs w-48 z-30 shadow-2xl">
+                                <div class="font-bold text-brand-400">Sistem Frânare Ceramic</div>
+                                <div class="text-gray-300 text-[11px] mt-1">Discuri carbon ventilate 410mm.</div>
+                            </div>
+                        </div>
+
+                        <!-- Hotspot 3: Suspensie Triplex -->
+                        <div class="absolute top-1/2 right-1/3 group">
+                            <button onclick="showSpecModal('suspensie')" class="relative flex items-center justify-center w-8 h-8 rounded-full bg-brand-500 text-white font-bold text-xs shadow-neon-strong animate-pulse">
+                                3
+                            </button>
+                            <div class="hidden group-hover:block absolute right-10 top-0 bg-darkBg/95 backdrop-blur-md p-3 rounded-xl border border-brand-400/40 text-xs w-48 z-30 shadow-2xl">
+                                <div class="font-bold text-brand-400">Suspensie Triplex</div>
+                                <div class="text-gray-300 text-[11px] mt-1">Amortizoare active ultra-ușoare.</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Product Catalog Section -->
+        <section id="catalog" class="py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                    <div>
+                        <span class="text-brand-400 font-mono text-xs uppercase tracking-widest">Stoc Actualizat în Timp Real</span>
+                        <h2 class="font-display text-3xl sm:text-4xl font-extrabold text-white mt-1">
+                            Piese & Componente Auto Recomandate
+                        </h2>
+                    </div>
+
+                    <!-- Category Tabs Filter -->
+                    <div class="flex flex-wrap gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
+                        <button onclick="filterCategory('all')" class="cat-btn active font-medium text-xs px-4 py-2 rounded-xl bg-brand-500 text-white transition-all">Toate</button>
+                        <button onclick="filterCategory('motor')" class="cat-btn font-medium text-xs px-4 py-2 rounded-xl text-gray-400 hover:text-white transition-all">Motor</button>
+                        <button onclick="filterCategory('frane')" class="cat-btn font-medium text-xs px-4 py-2 rounded-xl text-gray-400 hover:text-white transition-all">Frânare</button>
+                        <button onclick="filterCategory('turbo')" class="cat-btn font-medium text-xs px-4 py-2 rounded-xl text-gray-400 hover:text-white transition-all">Turbine</button>
+                        <button onclick="filterCategory('hypercar')" class="cat-btn font-medium text-xs px-4 py-2 rounded-xl text-gray-400 hover:text-white transition-all">Hypercar</button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Products dynamically rendered via JavaScript -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Stats & Testimonials Section -->
+        <section class="py-20 bg-slate-950/80 border-t border-brand-400/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="glass-panel p-8 rounded-2xl border-slate-800">
+                        <i data-lucide="truck" class="w-10 h-10 text-brand-400 mx-auto mb-4"></i>
+                        <div class="font-display text-4xl font-black text-white mb-1">15.400+</div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider">Comenzi Livrate cu Succes</p>
+                    </div>
+                    <div class="glass-panel p-8 rounded-2xl border-slate-800">
+                        <i data-lucide="smile" class="w-10 h-10 text-brand-400 mx-auto mb-4"></i>
+                        <div class="font-display text-4xl font-black text-white mb-1">99.8%</div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider">Clienți Mulțumiți</p>
+                    </div>
+                    <div class="glass-panel p-8 rounded-2xl border-slate-800">
+                        <i data-lucide="award" class="w-10 h-10 text-amber-400 mx-auto mb-4"></i>
+                        <div class="font-display text-4xl font-black text-white mb-1">#1</div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wider">Proiect Firmă de Exercițiu 2026</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer id="despre" class="bg-slate-950 border-t border-slate-800 pt-16 pb-12 text-gray-400 text-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                    
+                    <!-- Col 1: Brand Info -->
+                    <div class="space-y-4">
+                        <span class="font-display text-2xl font-black text-white tracking-wider">
+                            AUTO<span class="text-brand-400">PARTIX</span>
+                        </span>
+                        <p class="text-xs text-gray-400 leading-relaxed">
+                            Lider virtual în furnizarea pieselor auto de înaltă calitate, de la vehicule de zi cu zi la piese de colecție și hypercar-uri.
+                        </p>
+                        <div class="flex space-x-4 text-gray-400">
+                            <a href="#" class="hover:text-brand-400"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                            <a href="#" class="hover:text-brand-400"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                            <a href="#" class="hover:text-brand-400"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Col 2: Navigation Links -->
+                    <div>
+                        <h4 class="text-white font-bold mb-4 text-xs uppercase tracking-wider">Navigare</h4>
+                        <ul class="space-y-2 text-xs">
+                            <li><a href="#hero" class="hover:text-white">Acasă</a></li>
+                            <li><a href="#catalog" class="hover:text-white">Catalog Piese Auto</a></li>
+                            <li><a href="#tombola" class="hover:text-white">Marea Tombolă Koenigsegg</a></li>
+                            <li><a href="#koenigsegg-section" class="hover:text-white">Hypercar Specs</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 3: Categorii Piese -->
+                    <div>
+                        <h4 class="text-white font-bold mb-4 text-xs uppercase tracking-wider">Categorii Top</h4>
+                        <ul class="space-y-2 text-xs">
+                            <li><a href="#catalog" class="hover:text-white">Kit-uri Frânare Ceramică</a></li>
+                            <li><a href="#catalog" class="hover:text-white">Turbine Bi-Turbo High Flow</a></li>
+                            <li><a href="#catalog" class="hover:text-white">Piese Suspensie Sport</a></li>
+                            <li><a href="#catalog" class="hover:text-white">Uleiuri & Filtre Originale</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 4: Educational Legal Disclaimer -->
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-2">
+                        <div class="text-amber-400 font-bold flex items-center gap-1.5">
+                            <i data-lucide="info" class="w-4 h-4"></i>
+                            Notă Legală Educativă
+                        </div>
+                        <p class="text-[11px] text-gray-400 leading-normal">
+                            Proiect realizat pentru disciplina „Educație Antreprenorială”. Firma de exercițiu AutoPartix nu desfășoară tranzacții financiare reale.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="border-t border-slate-900 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
+                    <p>© 2026 AutoPartix Romania. Toate drepturile rezervate.</p>
+                    <p class="mt-2 sm:mt-0">Dezvoltat cu pasiune pentru mașini și performanță.</p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- SHOPPING CART DRAWER (Slide-over) -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 pointer-events-none hidden transition-all duration-300">
+        <!-- Backdrop -->
+        <div id="cart-backdrop" onclick="toggleCartDrawer()" class="absolute inset-0 bg-black/70 backdrop-blur-sm pointer-events-auto opacity-0 transition-opacity duration-300"></div>
+        
+        <!-- Drawer Panel -->
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-slate-950 border-l border-brand-400/20 shadow-2xl p-6 flex flex-col pointer-events-auto transform translate-x-full transition-transform duration-300" id="cart-panel">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-400"></i>
+                    <h3 class="text-lg font-bold text-white">Coșul Tău de Cumpărături</h3>
+                </div>
+                <button onclick="toggleCartDrawer()" class="text-gray-400 hover:text-white p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Ticket Bar Indicator inside Cart -->
+            <div class="my-4 p-3 rounded-xl bg-brand-500/10 border border-brand-400/30">
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-gray-300 font-medium">Progres Tombolă (3550 RON):</span>
+                    <span id="cart-progress-text" class="text-brand-400 font-bold font-mono">0 RON</span>
+                </div>
+                <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                    <div id="cart-progress-bar" class="h-full bg-gradient-to-r from-brand-400 to-amber-400 w-0 transition-all duration-300"></div>
+                </div>
+            </div>
+
+            <!-- Items Container -->
+            <div id="cart-items-list" class="flex-1 overflow-y-auto space-y-4 my-4 pr-1">
+                <!-- Cart items dynamically rendered -->
+            </div>
+
+            <!-- Footer Checkout area -->
+            <div class="border-t border-slate-800 pt-4 space-y-4">
+                <div class="flex justify-between items-center text-base">
+                    <span class="text-gray-400">Total de plată:</span>
+                    <span id="cart-total-price" class="font-display font-bold text-xl text-white">0 RON</span>
+                </div>
+
+                <button onclick="simulateCheckout()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-400 to-brand-600 text-darkBg font-black text-sm uppercase tracking-wider shadow-neon-blue hover:brightness-110 transition-all">
+                    Finalizează Comanda (Simulare)
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SEARCH MODAL -->
+    <div id="search-modal" class="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 hidden">
+        <div onclick="toggleSearchModal()" class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
+        <div class="relative w-full max-w-2xl glass-panel p-6 rounded-2xl border-brand-400/30 z-10 space-y-4">
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <i data-lucide="search" class="w-5 h-5 text-brand-400"></i>
+                <input type="text" id="modal-search-input" onkeyup="handleLiveSearch(this.value)" placeholder="Căutați piesă (ex: Discuri frână, Turbo Koenigsegg, Filtru)..." class="w-full bg-transparent text-white focus:outline-none text-base">
+                <button onclick="toggleSearchModal()" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="search-results-list" class="max-h-60 overflow-y-auto space-y-2">
+                <p class="text-xs text-gray-500 text-center py-4">Tastați pentru a căuta instant în stocul AutoPartix...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOTSPOT SPEC MODAL -->
+    <div id="spec-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 hidden">
+        <div onclick="closeSpecModal()" class="absolute inset-0 bg-black/80 backdrop-blur-md"></div>
+        <div class="relative w-full max-w-lg glass-panel p-6 rounded-2xl border-brand-400/40 z-10 space-y-4 bg-slate-950">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 id="spec-modal-title" class="font-bold text-lg text-white">Specificație Tehnică</h3>
+                <button onclick="closeSpecModal()" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <p id="spec-modal-body" class="text-sm text-gray-300 leading-relaxed"></p>
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeSpecModal()" class="px-4 py-2 bg-brand-500 text-white font-bold text-xs rounded-xl">
+                    Închide
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="glass-panel px-5 py-3.5 rounded-xl border-brand-400/50 bg-slate-900/95 shadow-neon-blue flex items-center gap-3">
+            <i data-lucide="check-circle" class="w-5 h-5 text-brand-400"></i>
+            <span id="toast-message" class="text-xs font-semibold text-white">Produs adăugat în coș!</span>
+        </div>
+    </div>
+
+    <!-- JavaScript Data & Business Logic -->
+    <script>
+        // Sample Products Catalog Data
+        const PRODUCTS = [
+            {
+                id: 'p1',
+                name: 'Sistem Frânare Carbon-Ceramic Koenigsegg Jesko',
+                category: 'frane',
+                make: 'koenigsegg',
+                price: 4200,
+                originalPrice: 5100,
+                rating: 5.0,
+                image: 'https://images.unsplash.com/photo-1600706432523-9914c02263b0?auto=format&fit=crop&w=600&q=80',
+                badge: 'Jesko Spec'
+            },
+            {
+                id: 'p2',
+                name: 'Turbină High Performance Twin-Scroll (BMW M3/M5)',
+                category: 'turbo',
+                make: 'bmw',
+                price: 1950,
+                originalPrice: 2400,
+                rating: 4.9,
+                image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80',
+                badge: 'Top Vânzări'
+            },
+            {
+                id: 'p3',
+                name: 'Kit Arbore Cotit Flat-Plane V8 Jesko (12.5kg)',
+                category: 'motor',
+                make: 'koenigsegg',
+                price: 14500,
+                originalPrice: 16800,
+                rating: 5.0,
+                image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80',
+                badge: 'Ediție Jesko'
+            },
+            {
+                id: 'p4',
+                name: 'Kit Plăcuțe & Discuri Frână VW Golf / Skoda Octavia',
+                category: 'frane',
+                make: 'volkswagen',
+                price: 680,
+                originalPrice: 850,
+                rating: 4.9,
+                image: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=600&q=80',
+                badge: 'Stoc Parcuri Volum'
+            },
+            {
+                id: 'p5',
+                name: 'Kit Ambreiaj & Volantă Dacia Logan / Sandero 1.5 dCi',
+                category: 'motor',
+                make: 'dacia',
+                price: 890,
+                originalPrice: 1100,
+                rating: 4.8,
+                image: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80',
+                badge: 'Volum Mare'
+            },
+            {
+                id: 'p6',
+                name: 'Evacuare Titan & Catalyst High-Flow Audi A4/A6',
+                category: 'turbo',
+                make: 'audi',
+                price: 3600,
+                originalPrice: 4100,
+                rating: 4.9,
+                image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80',
+                badge: 'Premium Performance'
+            }
+        ];
+
+        // Global State
+        let cart = [];
+        let activeCategory = 'all';
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderProducts(PRODUCTS);
+            setupCustomCursor();
+            calculateTickets();
+        });
+
+        // Raffle Ticket Calculator Logic
+        function calculateTickets() {
+            const amountInput = document.getElementById('calc-input-amount');
+            const displayCount = document.getElementById('ticket-count-display');
+            const progressBar = document.getElementById('calculator-progress-bar');
+            const targetText = document.getElementById('calculator-target-text');
+
+            let val = parseFloat(amountInput.value) || 0;
+            if (val < 0) val = 0;
+
+            const target = 3550;
+            const tickets = Math.floor(val / target);
+            const progress = Math.min(100, (val / target) * 100);
+
+            if (progressBar) {
+                progressBar.style.width = `${progress}%`;
+            }
+
+            if (targetText) {
+                targetText.innerText = `${val.toLocaleString('ro-RO')} / ${target.toLocaleString('ro-RO')} RON`;
+            }
+
+            if (displayCount) {
+                if (tickets === 0) {
+                    const remaining = target - val;
+                    displayCount.innerText = `0 Bilete (Mai ai nevoie de ${remaining.toLocaleString('ro-RO')} RON)`;
+                } else if (tickets === 1) {
+                    displayCount.innerText = `1 Bilet Garantat! 🎉`;
+                } else {
+                    displayCount.innerText = `${tickets} Bilete Garantați! 🎉`;
+                }
+            }
+        }
+
+        // Render Products Grid
+        function renderProducts(items) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-gray-500 py-10">Nu s-a găsit nicio piesă conform filtrului selectat.</p>`;
+                return;
+            }
+
+            items.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'glass-panel p-5 rounded-2xl glass-panel-hover flex flex-col justify-between border-slate-800 bg-slate-950/80 group';
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Product Image Container -->
+                        <div class="relative h-44 rounded-xl overflow-hidden bg-slate-900 mb-4 border border-slate-800">
+                            <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <span class="absolute top-2 left-2 bg-brand-500/90 text-white font-bold text-[10px] px-2.5 py-1 rounded-md border border-brand-400/40 uppercase tracking-wider">
+                                ${product.badge}
+                            </span>
+                        </div>
+
+                        <!-- Product Title & Rating -->
+                        <div class="flex items-center justify-between text-xs text-amber-400 mb-1">
+                            <div class="flex items-center gap-1">
+                                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                                <span class="font-bold">${product.rating}</span>
+                            </div>
+                            <span class="text-gray-500 font-mono uppercase text-[10px]">${product.make}</span>
+                        </div>
+
+                        <h3 class="font-bold text-white text-sm mb-2 group-hover:text-brand-400 transition-colors line-clamp-2">
+                            ${product.name}
+                        </h3>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-900 mt-2 flex items-center justify-between">
+                        <div>
+                            <div class="text-[10px] text-gray-500 line-through">${product.originalPrice} RON</div>
+                            <div class="font-display font-extrabold text-base text-brand-400">${product.price} RON</div>
+                        </div>
+
+                        <button onclick="addToCart('${product.id}')" class="p-2.5 rounded-xl bg-brand-500/20 text-brand-400 border border-brand-400/40 hover:bg-brand-500 hover:text-white transition-all shadow-neon-blue">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Category Filter logic
+        function filterCategory(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-500', 'text-white');
+                btn.classList.add('text-gray-400');
+            });
+            event.target.classList.add('bg-brand-500', 'text-white');
+
+            if (cat === 'all') {
+                renderProducts(PRODUCTS);
+            } else if (cat === 'hypercar') {
+                renderProducts(PRODUCTS.filter(p => p.make === 'koenigsegg'));
+            } else {
+                renderProducts(PRODUCTS.filter(p => p.category === cat));
+            }
+        }
+
+        // Shopping Cart Management
+        function addToCart(productId) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            if (!product) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast(`"${product.name}" a fost adăugat în coș!`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+            badge.innerText = totalCount;
+
+            const cartList = document.getElementById('cart-items-list');
+            cartList.innerHTML = '';
+
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                cartList.innerHTML = `<p class="text-center text-gray-500 text-xs py-8">Coșul tău este gol.</p>`;
+            } else {
+                cart.forEach(item => {
+                    totalPrice += item.price * item.quantity;
+                    const el = document.createElement('div');
+                    el.className = 'flex items-center gap-3 p-3 rounded-xl bg-slate-900 border border-slate-800';
+                    el.innerHTML = `
+                        <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
+                            <div class="text-[11px] text-brand-400 font-mono">${item.price} RON x ${item.quantity}</div>
+                        </div>
+                        <button onclick="removeFromCart('${item.id}')" class="text-red-400 hover:text-red-300 p-1">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                    cartList.appendChild(el);
+                });
+            }
+
+            document.getElementById('cart-total-price').innerText = `${totalPrice} RON`;
+
+            // Progress towards 3550 RON raffle entry
+            const target = 3550;
+            const progress = Math.min(100, (totalPrice / target) * 100);
+            document.getElementById('cart-progress-bar').style.width = `${progress}%`;
+            document.getElementById('cart-progress-text').innerText = `${totalPrice} / ${target} RON`;
+
+            lucide.createIcons();
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cart-drawer');
+            const panel = document.getElementById('cart-panel');
+            const backdrop = document.getElementById('cart-backdrop');
+            
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    drawer.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Specs Modal for Koenigsegg Hotspots
+        function showSpecModal(type) {
+            const modal = document.getElementById('spec-modal');
+            const title = document.getElementById('spec-modal-title');
+            const body = document.getElementById('spec-modal-body');
+
+            if (type === 'motor') {
+                title.innerText = 'Motor Koenigsegg Jesko 5.0L Twin-Turbo V8';
+                body.innerText = 'Motorul de pe Jesko este dezvoltat in-house de Koenigsegg. Este dotat cu cel mai ușor arbore cotit flat-plane V8 din lume (doar 12.5 kg), permițând o turație maximă de 8500 RPM. Produce 1280 CP pe benzină standard și 1600 CP / 1500 Nm pe combustibil E85.';
+            } else if (type === 'lst') {
+                title.innerText = 'Transmisie LST (Light Speed Transmission)';
+                body.innerText = 'Proiectată de Koenigsegg, cutia LST are 9 trepte și 7 ambreiaje acționate simultan. Permite schimbarea instantanee a treptelor (LST - UPOD: Ultimate Power On Demand) fără a trece prin treptele intermediare.';
+            } else if (type === 'suspensie') {
+                title.innerText = 'Sistem Suspensie Triplex (Față & Spate)';
+                body.innerText = 'Jesko folosește un al treilea amortizor orizontal Triplex atât pe puntea față, cât și pe spate. Acest sistem anulează efectul de "squat" la accelerări de peste 1.5G și stabilizează mașina la forța de apăsare aerodinamică de peste 1000 kg.';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeSpecModal() {
+            document.getElementById('spec-modal').classList.add('hidden');
+        }
+
+        // Search modal logic
+        function toggleSearchModal() {
+            const modal = document.getElementById('search-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function handleLiveSearch(query) {
+            const list = document.getElementById('search-results-list');
+            if (!query.trim()) {
+                list.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">Tastați pentru a căuta instant în stocul AutoPartix...</p>`;
+                return;
+            }
+
+            const matches = PRODUCTS.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
+            list.innerHTML = '';
+
+            if (matches.length === 0) {
+                list.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Nicio piesă găsită pentru "${query}".</p>`;
+            } else {
+                matches.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center hover:border-brand-400 cursor-pointer';
+                    row.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover">
+                            <div>
+                                <div class="text-xs font-bold text-white">${item.name}</div>
+                                <div class="text-[10px] text-gray-400 font-mono">${item.price} RON</div>
+                            </div>
+                        </div>
+                        <button onclick="addToCart('${item.id}'); toggleSearchModal();" class="text-xs text-brand-400 font-bold hover:underline">
+                            + Adaugă
+                        </button>
+                    `;
+                    list.appendChild(row);
+                });
+            }
+        }
+
+        function handleFilterSubmit(e) {
+            e.preventDefault();
+            const make = document.getElementById('select-make').value;
+            const category = document.getElementById('select-category').value;
+
+            let filtered = PRODUCTS;
+            if (make) filtered = filtered.filter(p => p.make === make);
+            if (category) filtered = filtered.filter(p => p.category === category);
+
+            renderProducts(filtered);
+            scrollToCatalog();
+        }
+
+        function simulateCheckout() {
+            if (cart.length === 0) {
+                alert("Coșul tău este gol! Adaugă cel puțin o piesă.");
+                return;
+            }
+            alert("🎉 Comandă Simulată cu Succes! Fiind o firmă de exercițiu, nu s-a procesat nicio plată reală. Mulțumim pentru testare!");
+            cart = [];
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function closeDisclaimer() {
+            document.getElementById('disclaimer-bar').style.display = 'none';
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function scrollToCatalog() {
+            document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Custom Mouse Light Tracking
+        function setupCustomCursor() {
+            const cursor = document.getElementById('custom-cursor');
+            window.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+        }
+    </script>
+</body>
+</html>
